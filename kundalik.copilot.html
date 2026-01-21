@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Дневник на 7 дней недели</title>
+  <style>
+    :root {
+      --bg: #f7f7f7;
+      --card: #ffffff;
+      --text: #222;
+      --muted: #666;
+      --border: #ddd;
+      --accent: #2b6cb0;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.4;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 32px auto;
+      padding: 0 16px;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+
+    .title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .meta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .label {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    input[type="text"] {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      min-width: 220px;
+    }
+
+    .table-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    thead th {
+      background: #f0f4f8;
+      color: #1f2937;
+      font-weight: 700;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+
+    tbody td {
+      border-top: 1px solid var(--border);
+      padding: 8px;
+      vertical-align: top;
+    }
+
+    .day-col {
+      width: 14.285%;
+    }
+
+    .slot {
+      display: grid;
+      gap: 6px;
+      padding: 6px;
+      border: 1px dashed #e2e8f0;
+      border-radius: 8px;
+      background: #fafafa;
+    }
+
+    .slot .row {
+      display: grid;
+      grid-template-columns: 1.2fr 1.8fr 1fr;
+      gap: 8px;
+    }
+
+    .slot input[type="text"] {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .slot .sub-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .notes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 12px;
+      border-top: 1px solid var(--border);
+      background: #f9fafb;
+    }
+
+    .notes .block {
+      display: grid;
+      gap: 6px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      resize: vertical;
+      background: var(--card);
+    }
+
+    .signs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 12px;
+      border-top: 1px solid var(--border);
+      background: #f9fafb;
+    }
+
+    .signs .field input {
+      min-width: 0;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 900px) {
+      .slot .row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 700px) {
+      thead th { font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="title">Школьный дневник — 7 дней недели</div>
+      <div class="meta">
+        <div class="field">
+          <label class="label">Месяц</label>
+          <input type="text" placeholder="Например: Январь" />
+        </div>
+        <div class="field">
+          <label class="label">Класс</label>
+          <input type="text" placeholder="Например: 7А" />
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="day-col">Понедельник</th>
+            <th class="day-col">Вторник</th>
+            <th class="day-col">Среда</th>
+            <th class="day-col">Четверг</th>
+            <th class="day-col">Пятница</th>
+            <th class="day-col">Суббота</th>
+            <th class="day-col">Воскресенье</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 6 строк для уроков/записей; можно увеличить при необходимости -->
+          <!-- Строка 1 -->
+          <tr>
+            <!-- Понедельник -->
+            <td>
+              <div class="slot">
+                <div class="row">
+                  <div>
+                    <div class="sub-label">Предмет</div>
+                    <input type="text" placeholder="Например: Математика" />
+                  </div>
+                  <div>
+                    <div class="sub-label">Классная работа</div>
+                    <input type="text" placeholder="Пусто" />
+                  </div>
+                  <div>
+                    <div class="sub-label">Домашняя работа</div>
+                    <input type="text" placeholder="Пусто" />
+                  </div>
+                </div>
+                <div>
+                  <div class="sub-label">Подпись учителя</div>
+                  <input type="text" placeholder="Пусто" />
+                </div>
+              </div>
+            </td>
+            <!-- Вторник -->
+            <td>
+              <div class="slot">
+                <div class="row">
+                  <div>
+                    <div class="sub-label">Предмет</div>
+                    <input type="text" placeholder="Например: Русский язык" />
+                  </div>
+                  <div>
+                    <div class="sub-label">Классная работа</div>
+                    <input type="text" placeholder="Пусто" />
+                  </div>
+                  <div>
+                    <div class="sub-label">Домашняя работа</div>
+                    <input type="text" placeholder="Пусто" />
+                  </div>
+                </div>
+                <div>
+                  <div class="sub-label">Подпись учителя</div>
+                  <input type="text" placeholder="Пусто" />
+                </div>
+              </div>
+            </td>
+            <!-- Среда -->
+            <td>
+              <div class="slot">
+                <div class="row">
+                  <div>
+                    <div class="sub-label">Предмет</div>
+                    <input type="text" placeholder="Например: История" />
+                  </div>
+                  <div>
+                    <div class="sub-label">Классная работа</div>
+                    <input type="text" placeholder="Пусто" />
+                  </div>
+                  <div>
+                    <div class="sub-label">Домашняя работа</div>
+                    <input type="text" placeholder="Пусто" />
+                  </div>
+                </div>
+                <div>
+                  <div class="sub-label">Подпись учителя</div>
+                  <input type="text" placeholder="Пусто" />
+                </div>
+              </div>
+            </td>
+            <!-- Четверг -->
+            <td>
+              <div class="slot">
+                <div class="row">
+                  <div>
+                    <div class="sub-label">Предмет</div>
+                    <input type="text" placeholder="Например: Биология" />
+                  </div>
+                  <div>
+                    <div class="sub-label">Классная работа</div>
+                    <input type="text" placeholder="Пусто" />
+                  </div>
+                  <div>
+                    <div class="sub-label">Домашняя работа</div>
+                    <input type="text" placeholder="Пусто" />
+                  </div>
+                </div>
+                <div>
+                  <div class="sub-label">Подпись учителя</div>
+                  <input type="text" placeholder="Пусто" />
+                </div>
+              </div>
+            </td>
+            <!-- Пятница -->
+            <td>
+              <div class="slot">
+                <div class="row">
+                  <div>
+                    <div class="sub-label">Предмет</div>
+                    <input type="text" placeholder="Например: Английский" />
+                  </div>
+                  <div>
+                    <div class="sub-label">Классная работа</div>
+                    <input type="text" placeholder="Пусто" />
+                  </div>
+                  <div>
+                    <div class="sub-label">Домашняя работа</div>
+                    <input type="text" placeholder="Пусто" />
+                  </div>
+                </div>
+                <div>
+                  <div class="sub-label">Подпись учителя</div>
+                  <input type="text" placeholder="Пусто" />
+                </div>
+              </div>
+            </td>
+            <!-- Суббота -->
+            <td>
+              <div class="slot">
+                <div class="row">
+                  <div>
+                    <div class="sub-label">Предмет</div>
+                    <input type="text" placeholder="Например: Физика" />
+                  </div>
+                  <div>
+                    <div class="sub-label">Классная работа</div>
+                    <input type="text" placeholder="Пусто" />
+                  </div>
+                  <div>
+                    <div class="sub-label">Домашняя работа</div>
+                    <input type="text" placeholder="Пусто" />
+                  </div>
+                </div>
+                <div>
+                  <div class="sub-label">Подпись учителя</div>
+                  <input type="text" placeholder="Пусто" />
+                </div>
+              </div>
+            </td>
+            <!-- Воскресенье -->
+            <td>
+              <div class="slot">
+                <div class="row">
+                  <div>
+                    <div class="sub-label">Предмет</div>
+                    <input type="text" placeholder="Например: Доп. занятия" />
+                  </div>
+                  <div>
+                    <div class="sub-label">Классная работа</div>
+                    <input type="text" placeholder="Пусто" />
+                  </div>
+                  <div>
+                    <div class="sub-label">Домашняя работа</div>
+                    <input type="text" placeholder="Пусто" />
+                  </div>
+                </div>
+                <div>
+                  <div class="sub-label">Подпись учителя</div>
+                  <input type="text" placeholder="Пусто" />
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Строка 2 -->
+          <tr>
+            <td><div class="slot"><div class="row">
+              <div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div>
+              <div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div>
+              <div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div>
+            </div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row">
+              <div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div>
+              <div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div>
+              <div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div>
+            </div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row">
+              <div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div>
+              <div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div>
+              <div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div>
+            </div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row">
+              <div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div>
+              <div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div>
+              <div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div>
+            </div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row">
+              <div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div>
+              <div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div>
+              <div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div>
+            </div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row">
+              <div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div>
+              <div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div>
+              <div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div>
+            </div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row">
+              <div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div>
+              <div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div>
+              <div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div>
+            </div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+          </tr>
+
+          <!-- Строки 3–6 (аналогично, можно копировать блоки выше) -->
+          <tr>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+          </tr>
+
+          <tr>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+          </tr>
+
+          <tr>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+            <td><div class="slot"><div class="row"><div><div class="sub-label">Предмет</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Классная работа</div><input type="text" placeholder="Пусто" /></div><div><div class="sub-label">Домашняя работа</div><input type="text" placeholder="Пусто" /></div></div><div><div class="sub-label">Подпись учителя</div><input type="text" placeholder="Пусто" /></div></div></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="notes">
+        <div class="block">
+          <div class="label">Для заметок</div>
+          <textarea placeholder="Пусто"></textarea>
+        </div>
+        <div class="block">
+          <div class="label">Дополнительные заметки</div>
+          <textarea placeholder="Пусто"></textarea>
+        </div>
+      </div>
+
+      <div class="signs">
+        <div class="field">
+          <label class="label">Подпись классного руководителя</label>
+          <input type="text" placeholder="Пусто" />
+        </div>
+        <div class="field">
+          <label class="label">Подпись родителей</label>
+          <input type="text" placeholder="Пусто" />
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
